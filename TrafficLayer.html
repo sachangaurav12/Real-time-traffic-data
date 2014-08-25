@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Traffic layer</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+	function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(initialize,showError);
+    } else { 
+        map-canvas.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            map-canvas.innerHTML = "User denied the request for Geolocation."
+            break;
+        case error.POSITION_UNAVAILABLE:
+            map-canvas.innerHTML = "Location information is unavailable."
+            break;
+        case error.TIMEOUT:
+            map-canvas.innerHTML = "The request to get user location timed out."
+            break;
+        case error.UNKNOWN_ERROR:
+            map-canvas.innerHTML = "An unknown error occurred."
+            break;
+    }
+}
+function initialize(position) {
+  var myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  var mapOptions = {
+    zoom: 13,
+    center: myLatlng
+  }
+
+  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+  var trafficLayer = new google.maps.TrafficLayer();
+  trafficLayer.setMap(map);
+}
+
+google.maps.event.addDomListener(window, 'load', getLocation);
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>
